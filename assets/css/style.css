@@ -1,0 +1,71 @@
+body, html {
+	font-family: "Roboto";
+	color: #ffffff;
+}
+
+p,ul{
+	font-size: 18px;
+}
+
+/* bootstrap modify */
+
+.info h2{
+	font-size: 60px;
+	font-family: "Roboto";
+}
+.info p {
+	font-size: 22px;
+	margin-top: 20px;
+}
+.info a {
+	padding: 10px 80px;
+	border-radius: 20px;
+	background: #ffffff;
+	color: #000000;
+	margin-top: 30px;
+}
+
+/* Team Section */
+.team-member h4{
+	margin: 20px 0;
+}
+.scrollbar{
+	height: 700px;
+	width: 20px;
+	background: green;
+	position: fixed;
+	top:0;
+	left: 0;
+}
+
+/* Menu */
+
+
+ul#menus {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	position: fixed;
+	top:30px;
+	left: 0;
+	width: 100%;
+	height: 50px;
+	z-index: 999999;
+}
+ul#menus li{
+	float: left;
+	padding: 10px 20px;
+}
+ul#menus li a {
+	color: #fff;
+	display: block;
+
+}
+ul#menus li.active a,
+ul#menus li a:hover{
+	color: #fff;
+	border-bottom: 2px solid #ddd;
+}
+header {
+	display: none !important;
+}

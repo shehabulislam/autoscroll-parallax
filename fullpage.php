@@ -96,6 +96,7 @@ function rj_fullpage_add_script_in_footer(){
 	$menu_visibility = get_option("rj_fullpage_menu_visibility");
 	$menu_visibility = !empty($menu_visibility)?$menu_visibility:'everypage';
 	$menus = get_option("rj_fullpage_menu_add");
+	$menus = $menus?$menus:array();
 	if($menu_visibility != "none"){
 		if($menu_visibility == 'home' && is_front_page()){
 			echo '<ul id="menus">';
