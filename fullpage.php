@@ -42,14 +42,15 @@ add_action("wp_enqueue_scripts", 'rj_fullpage_assets');
 function rj_fullpage_admin_assets($hook){
 	
 	if($hook == 'settings_page_fullpage-parallax'){
-		wp_enqueue_style("rj_fullpage_section_color_add", plugin_dir_url(__FILE__)."assets/admin/section-color-add/style.css");
+		wp_enqueue_style("rj_fullpage_section_color_add", plugin_dir_url(__FILE__)."assets/admin/style.css");
+		wp_enqueue_style("rj_fullpage_section_color_add", plugin_dir_url(__FILE__)."assets/admin/color-picker/colorPick.min.css");
 
 		wp_enqueue_script("rj_fullpage-tiny-color-picker", plugin_dir_url(__FILE__)."assets/admin/color-picker/jqColorPicker.min.js", array('jquery'), '', true);
-		wp_enqueue_script("rj_fullpage-tiny-colors-js", plugin_dir_url(__FILE__)."assets/admin/color-picker/colors.js", array('jquery'), '', true);
+		//wp_enqueue_script("rj_fullpage-tiny-colors-js", plugin_dir_url(__FILE__)."assets/admin/color-picker/colors.js", array('jquery'), '', true);
 
-		wp_enqueue_script("rj_fullpage-section-color-add", plugin_dir_url(__FILE__)."assets/admin/section-color-add/section-color-add.js", array('jquery'), '', true);
+		//wp_enqueue_script("rj_fullpage-section-color-add", plugin_dir_url(__FILE__)."assets/admin/section-color-add/section-color-add.js", array('jquery'), '', true);
 
-		wp_enqueue_script("rj_fullpage-color-picker-main", plugin_dir_url(__FILE__)."assets/admin/color-picker/picker-main.js", array('jquery'), '', true);
+		wp_enqueue_script("rj_fullpage-color-picker-main", plugin_dir_url(__FILE__)."assets/admin/color-picker/main.js", array('jquery', 'rj_fullpage-tiny-color-picker'), '', true);
 
 		
 	}
