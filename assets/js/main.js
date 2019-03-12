@@ -13,9 +13,5 @@
         menu: '#menus'
     });
 
-    console.log(data);
-    console.log(data.sectionColors);
-    console.log(data.autoScrolling);
-    console.log(data.menu);
 
 })(jQuery);
