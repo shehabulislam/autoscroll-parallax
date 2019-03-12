@@ -5,12 +5,17 @@
 	
 
 	var myFullpage = new fullpage('.fullpage', {
-        sectionsColor: ['#152121', '#152121', '#152121', '#152121', '#152121'],
-        anchors: ['home', 'vision', 'description', 'whatsinforme', 'team'],
+        sectionsColor: data.sectionColors,
+        anchors: data.menu,
         navigation:true,
-        navigationTooltips: ['Home', 'Vision', 'Description', 'Whats in for me?', 'Team'],
+        navigationTooltips: data.menu,
         showActiveTooltip: true,
         menu: '#menus'
     });
+
+    console.log(data);
+    console.log(data.sectionColors);
+    console.log(data.autoScrolling);
+    console.log(data.menu);
 
 })(jQuery);

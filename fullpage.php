@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Fullpage Parallax
+Plugin Name: Auto Scroll Parallax
 Plugin URI: http://www.facebook.com/shehabulislam0
 Author: Shehabul Islam Raju
 Author URI: http://www.facebook.com/shehabulislam0
@@ -10,144 +10,153 @@ Text Domain: fullpage-parallax
 
 
 */
-function rj_fullpage_load_text_domain(){
-	load_plugin_textdomain("fullpage-parallax", false, plugin_dir_path(__FILE__)."/languages");
-}
-add_action("plugin_loaded", "rj_fullpage_load_text_domain");
-function rj_fullpage_assets(){
-	wp_enqueue_style("rj-fullpage", plugin_dir_url(__FILE__).'assets/css/fullpage.css');
-	wp_enqueue_style("rj-fullpage-style", plugin_dir_url(__FILE__).'assets/css/style.css');
-	
 
+class RjFullpage{
 
-	wp_enqueue_script("rj-fullpage", plugin_dir_url(__FILE__).'assets/js/fullpage.js','','', true);
-	wp_enqueue_script("rj-fullpage-script", plugin_dir_url(__FILE__).'assets/js/main.js',array('jquery'),time(), true);
+	public function __construct(){
+		add_action("plugin_loaded", array($this, "rj_fullpage_load_text_domain"));
+		add_action("wp_enqueue_scripts", array($this, 'rj_fullpage_assets'));
+		add_action("admin_enqueue_scripts", array($this, "rj_fullpage_admin_assets"));
+		add_action("wp_head", array($this, "rj_fullpage_add_style"));
+		add_action("wp_footer", array($this, "rj_fullpage_add_script_in_footer"),9999);
+		add_action("admin_head", array($this, "rj_fullpage_add_script"));
+		add_action("admin_menu", array($this, "rj_fullpage_add_menu"));
+	}
 
-	//send data to main.js file
-	$autoScrolling = get_option('rj_fullpage_autoscrolling');
-	$colors =  get_option("rj_fullpage_section_color_add");
-	$menus =  get_option("rj_fullpage_menu_add");
+	public function rj_fullpage_load_text_domain(){
+		load_plugin_textdomain("fullpage-parallax", false, plugin_dir_path(__FILE__)."/languages");
+	}
 
-	$data = [
-		"autoScrolling" => $autoScrolling,
-		"sectionColors" => $colors,
-		"menu"			=> $menus
-	];
-	wp_localize_script('rj-fullpage-script', 'data', $data);
-
-}
-add_action("wp_enqueue_scripts", 'rj_fullpage_assets');
-
-// Admin assets
-function rj_fullpage_admin_assets($hook){
-	
-	if($hook == 'settings_page_fullpage-parallax'){
-		wp_enqueue_style("rj_fullpage_section_color_add", plugin_dir_url(__FILE__)."assets/admin/style.css");
-		wp_enqueue_style("rj_fullpage_section_color_add", plugin_dir_url(__FILE__)."assets/admin/color-picker/colorPick.min.css");
-
-		wp_enqueue_script("rj_fullpage-tiny-color-picker", plugin_dir_url(__FILE__)."assets/admin/color-picker/jqColorPicker.min.js", array('jquery'), '', true);
-		//wp_enqueue_script("rj_fullpage-tiny-colors-js", plugin_dir_url(__FILE__)."assets/admin/color-picker/colors.js", array('jquery'), '', true);
-
-		//wp_enqueue_script("rj_fullpage-section-color-add", plugin_dir_url(__FILE__)."assets/admin/section-color-add/section-color-add.js", array('jquery'), '', true);
-
-		wp_enqueue_script("rj_fullpage-color-picker-main", plugin_dir_url(__FILE__)."assets/admin/color-picker/main.js", array('jquery', 'rj_fullpage-tiny-color-picker'), '', true);
-
+	public function rj_fullpage_assets(){
+		wp_enqueue_style("rj-fullpage", plugin_dir_url(__FILE__).'assets/css/fullpage.css');
+		wp_enqueue_style("rj-fullpage-style", plugin_dir_url(__FILE__).'assets/css/style.css');
 		
+
+
+		wp_enqueue_script("rj-fullpage", plugin_dir_url(__FILE__).'assets/js/fullpage.js','','', true);
+		wp_enqueue_script("rj-fullpage-script", plugin_dir_url(__FILE__).'assets/js/main.js',array('jquery'),time(), true);
+
+		//send data to main.js file
+		$autoScrolling = get_option('rj_fullpage_autoscrolling');
+		$colors =  get_option("rj_fullpage_section_color_add");
+		$menus =  get_option("rj_fullpage_menu_add");
+
+		$data = [
+			"autoScrolling" => $autoScrolling,
+			"sectionColors" => $colors,
+			"menu"			=> str_replace(' ', '', $menus)
+		];
+		wp_localize_script('rj-fullpage-script', 'data', $data);
+
 	}
-}
-add_action("admin_enqueue_scripts", "rj_fullpage_admin_assets");
 
-function rj_fullpage_add_script($hook){
+	public function rj_fullpage_admin_assets($hook){
+	
+		if($hook == 'settings_page_fullpage-parallax'){
+			wp_enqueue_style("rj_fullpage_section_color_add", plugin_dir_url(__FILE__)."assets/admin/style.css");
+			//wp_enqueue_style("rj_fullpage_section_color_add", plugin_dir_url(__FILE__)."assets/admin/color-picker/colorPick.min.css");
 
-}
-add_action("admin_head", "rj_fullpage_add_script");
+			wp_enqueue_script("rj_fullpage-tiny-color-picker", plugin_dir_url(__FILE__)."assets/admin/color-picker/jqColorPicker.min.js", array('jquery'), '', true);
+			wp_enqueue_script("rj_fullpage-date-duplicator", plugin_dir_url(__FILE__)."assets/admin/jquery.duplicate.min.js", array('jquery'), '', true);
+			wp_enqueue_script("rj_fullpage-add-more", plugin_dir_url(__FILE__)."assets/admin/add-more.js", array('jquery'), '', true);
+			//wp_enqueue_script("rj_fullpage-tiny-colors-js", plugin_dir_url(__FILE__)."assets/admin/color-picker/colors.js", array('jquery'), '', true);
 
-function rj_fullpage_add_style(){
-	$menu_visibility = get_option("rj_fullpage_menu_visibility");
-	if($menu_visibility != 'none'){
+			//wp_enqueue_script("rj_fullpage-section-color-add", plugin_dir_url(__FILE__)."assets/admin/section-color-add/section-color-add.js", array('jquery'), '', true);
 
-	}
-	$menu_style = get_option("rj_fullpage_menu_style");
-	?>
-	<style type="text/css">
+			wp_enqueue_script("rj_fullpage-color-picker-main", plugin_dir_url(__FILE__)."assets/admin/color-picker/main.js", array('jquery', 'rj_fullpage-tiny-color-picker'), '', true);
 
-	#menus {
-		<?php echo $menu_style['position'] ?>: 50px;
-	}
-	#menus li a {
-		font-size: <?php echo $menu_style['font-size'] ?>;
-		color: <?php echo $menu_style['color'] ?>;
-		font-weight: <?php echo $menu_style['font-style'] ?>;
-		background: <?php echo $menu_style['background-color'] ?>;
-		border-radius: <?php echo $menu_style['border-radius'] ?>;
-	}
-	#menus li a:hover {
-		color: <?php echo $menu_style['hover'] ?>;
-		background: <?php echo $menu_style['hover-background'] ?>;
-	}
-	</style>
-	<?php
-}
-add_action("wp_head", "rj_fullpage_add_style");
-
-
-
-
-function rj_fullpage_add_script_in_footer(){
-	$menu_visibility = get_option("rj_fullpage_menu_visibility");
-	$menu_visibility = !empty($menu_visibility)?$menu_visibility:'everypage';
-	$menus = get_option("rj_fullpage_menu_add");
-	$menus = $menus?$menus:array();
-	if($menu_visibility != "none"){
-		if($menu_visibility == 'home' && is_front_page()){
-			echo '<ul id="menus">';
-			foreach($menus as $menu){
-				$anchor = str_replace(" ", "", $menu);
-				printf("<li data-menuanchor='%s'><a href='#%s'>%s</a></li>",$anchor,$anchor,$menu);
-			}
-			 	
-			echo "</ul>";
-		} else if($menu_visibility == 'home' && !is_home()){
-			return false;
-		}else {
-			echo '<ul id="menus">';
-			foreach($menus as $menu){
-				$anchor = str_replace(" ", "", $menu);
-				printf("<li data-menuanchor='%s'><a href='#%s'>%s</a></li>",$anchor,$anchor,$menu);
-			}
-			 	
-			echo "</ul>";
+			
 		}
-		
 	}
 
+	public function rj_fullpage_add_style(){
+		$menu_visibility = get_option("rj_fullpage_menu_visibility");
+		if($menu_visibility != 'none'){
+
+		}
+		$menu_style = get_option("rj_fullpage_menu_style");
+		?>
+		<style type="text/css">
+
+		#menus {
+			<?php echo $menu_style['position'] ?>: 50px;
+		}
+		#menus li a {
+			font-size: <?php echo $menu_style['font-size'] ?>;
+			color: <?php echo $menu_style['color'] ?>;
+			font-weight: <?php echo $menu_style['font-style'] ?>;
+			background: <?php echo $menu_style['background-color'] ?>;
+			border-radius: <?php echo $menu_style['border-radius'] ?>;
+			padding-right: <?php echo $menu_style['padding'] ?>;
+			padding-left: <?php echo $menu_style['padding'] ?>;
+		}
+		#menus li a:hover {
+			color: <?php echo $menu_style['hover'] ?>;
+			background: <?php echo $menu_style['hover-background'] ?>;
+		}
+		</style>
+		<?php
+	}
+
+	public function rj_fullpage_add_script_in_footer(){
+		$menu_visibility = get_option("rj_fullpage_menu_visibility");
+		$menu_visibility = !empty($menu_visibility)?$menu_visibility:'everypage';
+		$menus = get_option("rj_fullpage_menu_add");
+		$menus = $menus?$menus:array();
+		if($menu_visibility != "none"){
+			if($menu_visibility == 'home' && is_front_page()){
+				echo '<ul id="menus">';
+				foreach($menus as $menu){
+					$anchor = str_replace(" ", "", $menu);
+					printf("<li data-menuanchor='%s'><a href='#%s'>%s</a></li>",$anchor,$anchor,$menu);
+				}
+				 	
+				echo "</ul>";
+			} else if($menu_visibility == 'home' && !is_home()){
+				return false;
+			}else {
+				echo '<ul id="menus">';
+				foreach($menus as $menu){
+					$anchor = str_replace(" ", "", $menu);
+					printf("<li data-menuanchor='%s'><a href='#%s'>%s</a></li>",$anchor,$anchor,$menu);
+				}
+				 	
+				echo "</ul>";
+			}
+			
+		}
+
+
+	}
+
+	public function rj_fullpage_add_script($hook){
+
+	}
+
+	public function rj_fullpage_add_menu(){
+		add_options_page(__("Fullpage Settings", "fullpage-parallax"), __("FullPage Settings", "fullpage-parallax"), 'manage_options', 'fullpage-parallax', array($this, 'rj_fullpage_menu_callback'));
+	}
+
+	public function rj_fullpage_menu_callback(){
+		?>
+		<h1>Fullpage Settings</h1>
+		<form action="options.php" method="post">
+			
+			<?php settings_fields('rj_fullpage_section'); ?>
+			<?php //settings_fields('rj_fullpage_color_section'); ?>
+			<?php do_settings_sections('fullpage-parallax'); ?>
+			<?php submit_button(); ?>
+		</form>
+		<?php
+	}
+	
+
+
+
+
 
 }
-add_action("wp_footer", "rj_fullpage_add_script_in_footer",9999);
-
-
-
-
-
-
-// Create Menu Page
-
-function rj_fullpage_add_menu(){
-	add_options_page(__("Fullpage Settings", "fullpage-parallax"), __("FullPage Settings", "fullpage-parallax"), 'manage_options', 'fullpage-parallax', 'rj_fullpage_menu_callback');
-}
-function rj_fullpage_menu_callback(){
-	?>
-	<h1>Fullpage Settings</h1>
-	<form action="options.php" method="post">
-		
-		<?php settings_fields('rj_fullpage_section'); ?>
-		<?php //settings_fields('rj_fullpage_color_section'); ?>
-		<?php do_settings_sections('fullpage-parallax'); ?>
-		<?php submit_button(); ?>
-	</form>
-	<?php
-}
-add_action("admin_menu", "rj_fullpage_add_menu");
+new RjFullpage();
 
 
 // Create Field
@@ -246,6 +255,10 @@ function rj_fullpage_menu_style_callback(){
 	//menu font size
 	echo "<tr><td><h3 class='menu-style'>Menu font size</h3></td>";
 	printf("<td><input type='text' name='%s' value='%s' /></td></tr>",'rj_fullpage_menu_style[font-size]',$menu_style["font-size"]);
+
+	//menu item padding
+	echo "<tr><td><h3 class='menu-style'>Menu item padding</h3></td>";
+	printf("<td><input type='text' name='%s' value='%s' /></td></tr>",'rj_fullpage_menu_style[padding]',$menu_style["padding"]);
 	
 
 	//menu font style
