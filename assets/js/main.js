@@ -13,5 +13,6 @@
         menu: '#menus'
     });
 
+    console.log("someting");
 
 })(jQuery);
